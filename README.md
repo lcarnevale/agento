@@ -26,9 +26,9 @@ $ flask run
 
 ### How to use it
 ```bash
-$ curl -i -X PUT 
--H "Content-Type: application/json"
--d '{"time":2, "source":"guest"}' 
+$ curl -i -X PUT \
+-H "Content-Type: application/json" \
+-d '{"time":2, "source":"guest"}' \
 http://localhost:5000/api/v1/monitor/mem
 ```
 

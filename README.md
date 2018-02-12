@@ -97,8 +97,24 @@ This project implements two services.
 
 ### Monitor
 
-- /api/v1/monitor/\<string:option\>
+- */api/v1/monitor/*
+
 	Execute a child program in a new process.
+
+- *Method*
+
+	PUT | DELETE
+
+- *URL Params*
+
+	/api/v1/monitor/\<string:option\>
+	
+	*Required*:
+	option=[string]
+
+- *Success Response*
+
+	- {'response': True, 'status': 200}
 
 
 ## Credits

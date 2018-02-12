@@ -58,6 +58,11 @@ $ export FLASK_APP=restful.py
 $ flask run
 ```
 
+Try the web server:
+```bash
+$ curl -i http://localhost:5000/api/v1
+```
+
 ### How to use it
 ```bash
 $ curl -i -X PUT \
@@ -88,7 +93,13 @@ http://localhost:5000/api/v1/deploy
 ```
 
 ## RESTful APIs list
-todo
+This project implements two services.
+
+## /api/v1/monitor/<string:option>
+
+- URL
+
+Execute a child program in a new process.
 
 
 ## Credits

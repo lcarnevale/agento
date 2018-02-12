@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/api/v1', methods=['GET'])
 def apis_list():
-    return jsonify({'response': True, 'comment': 'I want you back free!'})
+    return jsonify({'response': True, status:200, 'comment': 'Hi, I am agento!'})
 
 
 @app.route('/api/v1/monitor/<string:option>', methods=['PUT', 'DELETE'])

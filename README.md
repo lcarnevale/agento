@@ -45,16 +45,7 @@ Server:
 ```
 
 ### Installing
-This project is compatible with **python2.7** and uses the following modules:
-- click==6.7
-- Flask==0.12.2
-- itsdangerous==0.24
-- Jinja2==2.10
-- MarkupSafe==1.0
-- psutil==5.4.3
-- Werkzeug==0.14.1
-
-The *requirements.txt* file includes all the dependencies.
+This project is compatible with **python2.7**. The *requirements.txt* file includes all the dependencies.
 ```bash
 $ pip install -r requirements.txt
 ```

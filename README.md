@@ -63,31 +63,12 @@ Try the web server:
 $ curl -i http://localhost:5000/api/v1
 ```
 
-### How to use it
-
-
-
-
-```bash
-$ curl -i -X PUT \
--H "Content-Type: application/json"  \
--d '{"image":"redis:4.0.8-alpine","ports":"","name":"redis","host":"","volumes":"","privileged":"","command":""}' \
-http://localhost:5000/api/v1/deploy
-```
-
-```bash
-$ curl -i -X DELETE \
--H "Content-Type: application/json"  \
--d '{"name":"redis", "image":"redis:4.0.8-alpine"}' \
-http://localhost:5000/api/v1/deploy
-```
-
 ## RESTful APIs list
 This project implements two services.
 
 ### Monitor
 
-- **/api/v1/monitor/**
+- **/api/v1/monitor**
 
 - **Method**
 
@@ -128,9 +109,9 @@ This project implements two services.
 	$ curl -i -X PUT \
 	-H "Content-Type: application/json" \
 	-d '{ \
-			"time":2, \
-			"source":"guest" \
-		}' \
+		"time":2, \
+		"source":"guest" \
+	}' \
 	http://localhost:5000/api/v1/monitor/mem
 	```
 
@@ -138,8 +119,8 @@ This project implements two services.
 	$ curl -i -X DELETE \
 	-H "Content-Type: application/json" \
 	-d '{ \
-			"source":"guest" \	
-		}' \
+		"source":"guest" \	
+	}' \
 	http://localhost:5000/api/v1/monitor/mem
 	```
 
@@ -147,6 +128,79 @@ This project implements two services.
 
 	The PUT API executes a child program in a new process for monitoring cpu, network or memory. It run separately process for each monitor. You are able to monitor host cpu with sample time 5 second and guest mem with sample time 10 second.
 	The DELETE API executes a child program in a new process for killing the monitoring.
+
+### Deploy
+
+- **/api/v1/deploy**
+
+- **Method**
+
+	PUT | DELETE
+
+- **Data Params**
+
+	```bash
+	{
+		"image":[string],
+		"name":[string],
+		"command":[string or list]
+		"ports":[dict],
+		"volumes":[dict],
+		"privileged":[bool],
+	}
+	```
+
+	- *image* - The image to run;
+	- *name* - The name for this container;
+	- *command* - The command to run in the container;
+	- *ports* - Ports to bind inside the container. The keys of the dictionary are the ports to bind inside the container, either as an integer or a string in the form port/protocol, where the protocol is either tcp or udp
+	- *privileged* - Give extended privileges to this container;
+	- *volumes* - A dictionary to configure volumes mounted inside the container. The key is either the host path or a volume name, and the value is a dictionary with the keys: bind The path to mount the volume inside the container; mode Either rw to mount the volume read/write, or ro to mount it read-only.
+
+	For more details [here](https://docker-py.readthedocs.io/en/stable/containers.html#docker.models.containers.ContainerCollection.run)
+
+
+- **Success Response**
+
+	- {'response': True, 'status': 200}
+
+- **Error Response**
+
+	- **Code**: 400 Bad Request
+	- **Code**: 409 Client Error
+
+- **Sample Call**
+
+	```bash
+	$ curl -i -X PUT \
+	-H "Content-Type: application/json"  \
+	-d '{ \
+		"image":"redis:4.0.8-alpine", \
+		"ports":"", \
+		"name":"redis", \
+		"host":"", \
+		"volumes":"", \
+		"privileged":"", \
+		"command":"" \
+	}' \
+	http://localhost:5000/api/v1/deploy
+	```
+
+	```bash
+	$ curl -i -X DELETE \
+	-H "Content-Type: application/json"  \
+	-d '{ \
+		"name":"redis", \
+		"image":"redis:4.0.8-alpine" \
+	}' \
+	http://localhost:5000/api/v1/deploy
+	```
+
+- **Note**
+
+	The PUT API downloads (if not present the image) and runs a container in detach mode.
+	The DELETE API stops and removes the container and deletes the images.
+
 
 ## Credits
 agento is the result of research conducted at the University of Messina. 

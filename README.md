@@ -5,7 +5,7 @@ The agento project follows the idea extracted by [*Osmotic Computing: A New Para
 ## Why agento?
 agento is the first ever designed and developed Osmotic Agent. Its task is to mark the devices, considered as microprocessors, virtual machines or physical machines, through the installation of a software that enables communication from/to the Osmotic architecture core.
 
-![alt text](https://www.w3schools.com/howto/img_fjords.jpg)
+![alt text]()
 
 
 ## Getting Started

@@ -1,6 +1,6 @@
 # agento: the First Osmotic Agent
 
-Authors: [Lorenzo Carnevale](lorenzocarnevale@gmail.com)
+**Authors**: [Lorenzo Carnevale](mailto:lorenzocarnevale@gmail.com)
 
 The agento project follows the idea extracted by [*Osmotic Computing: A New Paradigm for Edge/Cloud Integration, M. Villari, M. Fazio, S. Dustdar, O. Rana and R. Ranjan*](http://ieeexplore.ieee.org/document/7802525/). It presented the Osmotic Computing in 2016 as a new promising paradigm for the integration between a centralised Cloud layer and Edge/Internet of Things (IoT) layers; whereas its basic principles and enabling technologies were presented in [*Towards Osmotic Computing: Looking at Basic Principles and Technologies, M. Villari, A. Celesti, M. Fazio*](https://link.springer.com/chapter/10.1007/978-3-319-61566-0_86).
 
@@ -22,10 +22,39 @@ The Storage layer includes an In-Memory database that implements the Publish/Sub
 The instructions below will get you a copy of the project on your local machine for developing and testing.
 
 ### Prerequisities
+agento makes use of Docker.
+```bash
+$ lcarnevale@lcarnevale-pc:~/mypath$ docker version
+Client:
+ Version:	17.12.0-ce
+ API version:	1.35
+ Go version:	go1.9.2
+ Git commit:	c97c6d6
+ Built:	Wed Dec 27 20:11:19 2017
+ OS/Arch:	linux/amd64
 
+Server:
+ Engine:
+  Version:	17.12.0-ce
+  API version:	1.35 (minimum version 1.12)
+  Go version:	go1.9.2
+  Git commit:	c97c6d6
+  Built:	Wed Dec 27 20:09:53 2017
+  OS/Arch:	linux/amd64
+  Experimental:	false
+```
 
 ### Installing
-The *requirements.txt* file includes all the project python dependencies.
+This project is compatible with **python2.7** and uses the following modules:
+- click==6.7
+- Flask==0.12.2
+- itsdangerous==0.24
+- Jinja2==2.10
+- MarkupSafe==1.0
+- psutil==5.4.3
+- Werkzeug==0.14.1
+
+The *requirements.txt* file includes all the dependencies.
 ```bash
 $ pip install -r requirements.txt
 ```

@@ -95,11 +95,10 @@ http://localhost:5000/api/v1/deploy
 ## RESTful APIs list
 This project implements two services.
 
-## /api/v1/monitor/<string:option>
+### Monitor
 
-- URL
-
-Execute a child program in a new process.
+- /api/v1/monitor/\<string:option\>
+	Execute a child program in a new process.
 
 
 ## Credits

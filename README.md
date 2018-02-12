@@ -1,4 +1,6 @@
-# agento
+# agento: the First Osmotic Agent
+
+Authors: [Lorenzo Carnevale](lorenzocarnevale@gmail.com)
 
 The agento project follows the idea extracted by [*Osmotic Computing: A New Paradigm for Edge/Cloud Integration, M. Villari, M. Fazio, S. Dustdar, O. Rana and R. Ranjan*](http://ieeexplore.ieee.org/document/7802525/). It presented the Osmotic Computing in 2016 as a new promising paradigm for the integration between a centralised Cloud layer and Edge/Internet of Things (IoT) layers; whereas its basic principles and enabling technologies were presented in [*Towards Osmotic Computing: Looking at Basic Principles and Technologies, M. Villari, A. Celesti, M. Fazio*](https://link.springer.com/chapter/10.1007/978-3-319-61566-0_86).
 
@@ -6,11 +8,13 @@ The agento project follows the idea extracted by [*Osmotic Computing: A New Para
 agento is the first ever designed and developed Osmotic Agent. Its task is to mark the devices (i.e. microprocessors, virtual machines or physical machines) through the installation of a software that enables communication from/to the Osmotic architecture core.
 
 agento is a lightweight virtual machine that interacts with the host operating system in order to monitor host itself and other virtual machines; and deploy MicroELements (MELs) on the same level.
+
 ![agento-environment](https://github.com/lcarnevale/agento/blob/master/doc/figure/agento1.png?raw=true)
 
 It is designed on three layers. The Interface layer includes the RESTful APIs for using the deploy and monitor funcionalities. It is an HTTP interface for enabling the Osmotic Agent services and receives instructions from the architecture core. On the other hand, the Event producer consumes the data received from the Storage Layer and sends these to the architecture core.
 The Service layer includes two functionalities, such as Deploy and Monitor. The first one is a service application addressed for deploying the injected MELs. It is enabled by means of the RESTful APIs. The second one is a service application addressed for monitoring the active resources. It is also enabled by means of the RESTful APIs.
 The Storage layer includes an In-Memory database that implements the Publish/Subscribe messaging paradigm. It works as message broker, in which the Deploy and Monitor Blocks are Publisher; whereas the Event Producer is a Subscriber.
+
 ![agento-architecture](https://github.com/lcarnevale/agento/blob/master/doc/figure/agento2.png?raw=true)
 
 
@@ -65,3 +69,7 @@ http://localhost:5000/api/v1/deploy
 
 ## RESTful APIs list
 todo
+
+
+## Credits
+agento is the result of research conducted at the University of Messina. 

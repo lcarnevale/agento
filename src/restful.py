@@ -20,13 +20,12 @@ def monitor(option):
     sources = ['host', 'guest'] # todo: from conffile
     
     if not option in options:
-        abort(404) # Raise an HTTPException with a 404 not found status code
+        abort(404) # Raise an HTTPException with a 404 status code
     if request.method == 'PUT':
         payload = json.loads(request.data)
         if not payload['source'] in sources:
-            abort(400) # Raise an HTTPException with a 400 not found status code
+            abort(400) # Raise an HTTPException with a 400 status code
         command = 'python monitor/monitor_%s.py %s %s' % (payload['source'], payload['time'], option)
-        #os.system(command)
         p = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         return jsonify({
             'response': True,
@@ -46,8 +45,7 @@ def monitor(option):
             command_grep4 = "grep -v grep"
             command_awk = ["awk", "{print $4}"]
         else:
-            abort(400)
-        #pid =  os.popen(command).read().split("\n")[0]
+            abort(400) # Raise an HTTPException with a 400 status code
         p_ps = subprocess.Popen(command_ps.split(), stdout=subprocess.PIPE)
         p_grep1 = subprocess.Popen(command_grep1.split(), stdin=p_ps.stdout, stdout=subprocess.PIPE)
         p_grep2 = subprocess.Popen(command_grep2.split(), stdin=p_grep1.stdout, stdout=subprocess.PIPE)
@@ -59,31 +57,40 @@ def monitor(option):
         p_ps.wait()
 
         if not pid:
-            abort(400)
-        #os.popen("kill -9 "+pid)
+            abort(400) # Raise an HTTPException with a 400 status code
         p = subprocess.Popen(["kill", "-9", pid], stdout=subprocess.PIPE)
+        
         return jsonify({
             'response': True,
-            'method': request.method,
-            'option':option, 
-            'pid': pid,
-            'source': payload['source']})
+            'status': 200})
 
 
 @app.route('/api/v1/deploy', methods=['PUT', 'DELETE'])
 def deploy():
 
     payload = json.loads(request.data)
-
     client = docker.from_env()
+    
     if request.method == 'PUT':
-        client.containers.run(payload['image'],name=payload['name'],detach=True)
+        client.containers.run(
+            payload['image'],
+            command=payload['command'],
+            name=payload['name'],
+            privileged=payload['privileged'],
+            ports=payload['ports'],
+            volumes=payload['volumes'],
+            detach=True)
 
     if request.method == 'DELETE':
-        client.containers.get(payload['name']).stop()
-        client.containers.get(payload['name']).remove()
-        client.images.remove(payload['image'])
+        try:
+            client.containers.get(payload['name']).stop()
+            client.containers.get(payload['name']).remove()
+            client.images.remove(payload['image'])
+        except docker.errors.NotFound as e:
+            abort(400)
+        except docker.errors.APIError as e:
+            abort(409)
 
     return  jsonify({
         'response': True,
-        'method': request.method})
+        'status': 200})

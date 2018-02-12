@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request, abort
 import os
 import json
 import subprocess
+import docker
 
 app = Flask(__name__)
 
@@ -71,35 +72,17 @@ def monitor(option):
 
 @app.route('/api/v1/deploy', methods=['PUT', 'DELETE'])
 def deploy():
-    """
-        Payload is
-            {
-                'image': 'claudiocinc/mongodb',
-                'port': '-p 27001:27001',
-                'name': 'mongodb',
-                'host': '--net=host'
-                'volume': '',
-                'privileges': ''
-            }
-    """
 
     payload = json.loads(request.data)
 
+    client = docker.from_env()
     if request.method == 'PUT':
-        # docker run -d conf['privileges'] conf['host'] conf['port'] conf['name'] conf['volume'] conf['image']
-        command = 'docker run -d %s %s %s %s --name %s %s' % (payload['privileges'], payload['host'], payload['port'], payload['volume'], payload['name'], payload['image'])
-        os.popen(command)
-        #subprocess.Popen(command, stdout=subprocess.PIPE)
-        command = 'docker start %s' % (payload['name'])
-        os.popen(command)
+        client.containers.run(payload['image'],name=payload['name'],detach=True)
 
     if request.method == 'DELETE':
-        command = 'docker stop %s' % (payload['name'])
-        os.popen(command)
-        command = 'docker rm %s' % (payload['name'])
-        os.popen(command)
-        command = 'docker rmi %s' % (payload['image'])
-        os.popen(command)
+        client.containers.get(payload['name']).stop()
+        client.containers.get(payload['name']).remove()
+        client.images.remove(payload['image'])
 
     return  jsonify({
         'response': True,

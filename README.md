@@ -64,19 +64,9 @@ $ curl -i http://localhost:5000/api/v1
 ```
 
 ### How to use it
-```bash
-$ curl -i -X PUT \
--H "Content-Type: application/json" \
--d '{"time":2, "source":"guest"}' \
-http://localhost:5000/api/v1/monitor/mem
-```
 
-```bash
-$ curl -i -X DELETE \
--H "Content-Type: application/json" \
--X DELETE -d '{"source":"guest"}' \
-http://localhost:5000/api/v1/monitor/mem
-```
+
+
 
 ```bash
 $ curl -i -X PUT \
@@ -97,25 +87,66 @@ This project implements two services.
 
 ### Monitor
 
-- */api/v1/monitor/*
+- **/api/v1/monitor/**
 
-	Execute a child program in a new process.
-
-- *Method*
+- **Method**
 
 	PUT | DELETE
 
-- *URL Params*
+- **URL Params**
 
 	/api/v1/monitor/\<string:option\>
 	
-	*Required*:
+	**Required**:
+	
 	option=[string]
 
-- *Success Response*
+- **Data Params**
+
+	```bash
+	{
+		"time":[integer], 
+		"source":[string]
+	}
+	```
+
+	- *time* represents the sample time in second;
+	- *source* represents the source from which is read the monitor. It is **host** or **guest**.
+
+- **Success Response**
 
 	- {'response': True, 'status': 200}
 
+- **Error Response**
+
+	- **Code**: 404 Not Found
+	- **Code**: 400 Bad Request
+
+- **Sample Call**
+
+	```bash
+	$ curl -i -X PUT \
+	-H "Content-Type: application/json" \
+	-d '{ \
+			"time":2, \
+			"source":"guest" \
+		}' \
+	http://localhost:5000/api/v1/monitor/mem
+	```
+
+	```bash
+	$ curl -i -X DELETE \
+	-H "Content-Type: application/json" \
+	-d '{ \
+			"source":"guest" \	
+		}' \
+	http://localhost:5000/api/v1/monitor/mem
+	```
+
+- **Note**
+
+	The PUT API executes a child program in a new process for monitoring cpu, network or memory. It run separately process for each monitor. You are able to monitor host cpu with sample time 5 second and guest mem with sample time 10 second.
+	The DELETE API executes a child program in a new process for killing the monitoring.
 
 ## Credits
 agento is the result of research conducted at the University of Messina. 

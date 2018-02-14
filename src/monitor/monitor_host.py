@@ -4,22 +4,33 @@
 	Authors: Lorenzo Carnevale <lorenzocarnevale@gmail.com>
 """
 
-import sys
-import time
-import json
+import os, sys, time
+from threading import Thread
 import psutil
+import json
+import redis
+
 
 
 DEBUG = 1
 
 class Monitor():
 
-	def __init__(self, interval):
+	def __init__(self, interval, db):
+		# class variables
 		self.__interval = float(interval)
-		self.__fundict = dict()
-		self.__fundict['mem'] = self.__mem
-		self.__fundict['cpu'] = self.__cpu
-		self.__fundict['net'] = self.__net
+		self.__db = str(db)
+		# function's dictionary for hw
+		self.__funDictHw = dict()
+		self.__funDictHw['mem'] = self.__mem
+		self.__funDictHw['cpu'] = self.__cpu
+		self.__funDictHw['net'] = self.__net
+		# function's dictionary for db
+		self.__funDictDb = dict()
+		self.__funDictDb['null'] = self.__toNull
+		self.__funDictDb['redis'] = self.__toRedis
+		if db is 'redis':
+			self.conn = redis.Redis('localhost')
 
 
 
@@ -139,17 +150,36 @@ class Monitor():
 		return json_data
 
 
+	def __toRedis(self, threadName, json_data):
+		self.conn.hmset(threadName, json_data)
+
+	def __toNull(self, threadName, json_data):
+		old_stdout = sys.stdout
+		sys.stdout = open(os.devnull, 'w')
+		sys.stdout = old_stdout
+		if DEBUG:
+			print 'toNull'
+
+
 	def run(self, mons):
 		try:
 			while True:
 				for mon in mons:
-					self.__fundict[mon]()
+					json_data = self.__funDictHw[mon]()
+					try:
+						thread = Thread(target = self.__funDictDb[self.__db], args = (mon, json_data, ))
+						thread.start()
+						thread.join()
+					except:
+					   print "Error: unable to start thread"
 				time.sleep(self.__interval)
 		except (KeyboardInterrupt, SystemExit):
 			pass
 
 
+
 if __name__ == '__main__':
-	interval = sys.argv[1]
-	monitors = sys.argv[2:]
-	Monitor(interval).run(monitors)
+	db = sys.argv[1]
+	interval = sys.argv[2]
+	monitors = sys.argv[3:]
+	Monitor(interval, db).run(monitors)

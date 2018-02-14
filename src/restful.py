@@ -25,7 +25,7 @@ def monitor(option):
         payload = json.loads(request.data)
         if not payload['source'] in sources:
             abort(400) # Raise an HTTPException with a 400 status code
-        command = 'python monitor/monitor_%s.py %s %s' % (payload['source'], payload['time'], option)
+        command = 'python monitor/monitor_%s.py null %s %s' % (payload['source'], payload['time'], option)
         p = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         return jsonify({
             'response': True,

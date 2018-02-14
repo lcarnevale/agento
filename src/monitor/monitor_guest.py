@@ -8,6 +8,7 @@ import os, sys, time
 from threading import Thread
 import json
 import redis
+import pickle
 
 
 
@@ -128,7 +129,7 @@ class MonitorGuest():
 
 
 	def __toRedis(self, threadName, json_data):
-		self.conn.hmset(threadName, json_data)
+		self.conn.set(threadName, pickle.dumps(json_data))
 
 	def __toNull(self, threadName, json_data):
 		old_stdout = sys.stdout

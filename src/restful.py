@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/api/v1', methods=['GET'])
 def apis_list():
-    return jsonify({'response': True, status:200, 'comment': 'Hi, I am agento!'})
+    return jsonify({'response': True, 'status':200, 'comment': 'Hi, I am agento!'})
 
 
 @app.route('/api/v1/monitor/<string:option>', methods=['PUT', 'DELETE'])
@@ -87,9 +87,9 @@ def deploy():
             client.containers.get(payload['name']).remove()
             client.images.remove(payload['image'])
         except docker.errors.NotFound as e:
-            abort(400)
+            abort(400) # Raise an HTTPException with a 400 status code
         except docker.errors.APIError as e:
-            abort(409)
+            abort(409) # Raise an HTTPException with a 409 status code
 
     return  jsonify({
         'response': True,

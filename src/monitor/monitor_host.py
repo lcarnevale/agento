@@ -9,8 +9,6 @@ from threading import Thread
 import psutil
 import json
 import redis
-import pickle
-
 
 
 DEBUG = 1
@@ -31,6 +29,7 @@ class Monitor():
 		self.__funDictDb['null'] = self.__toNull
 		self.__funDictDb['redis'] = self.__toRedis
 		if db is 'redis':
+			print 'here'
 			self.conn = redis.Redis('localhost')
 
 
@@ -152,7 +151,8 @@ class Monitor():
 
 
 	def __toRedis(self, threadName, json_data):
-		self.conn.set(threadName, pickle.dumps(json_data))
+		key = '%s_%s' % (threadName,str(int(time.time())))
+		self.conn.set(key, json_data)
 
 	def __toNull(self, threadName, json_data):
 		old_stdout = sys.stdout

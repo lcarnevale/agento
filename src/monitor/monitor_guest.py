@@ -35,7 +35,7 @@ class MonitorGuest():
 
 	def __mem_poll(self):
 		#command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$2\";\"$4\";\"$6\";\"$7}'" # 1-id; 2-name; 4-memusage; 6-memlimit; 7-memperc
-		command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$3 $4\";\"$6 $7\";\"$8}'" # 1-id; 34-memusage; 67-memlimit; 8-memperc
+		command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$3\" \"$4\";\"$6\" \"$7\";\"$8}'" # 1-id; 34-memusage; 67-memlimit; 8-memperc
 		res = os.popen(command).read().split("\n")
 		data = []
 		for r in res:
@@ -99,7 +99,7 @@ class MonitorGuest():
 
 	def __net_poll(self):
 		#command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$2\";\"$8\";\"$8}'" # 1-id; 2-name; 8-netin; 9-netout
-		command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$9 $10\";\"$12 $13}'" # 1-id; 910-netin; 1213-netout
+		command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$9\" \"$10\";\"$12\" \"$13}'" # 1-id; 910-netin; 1213-netout
 		res = os.popen(command).read().split("\n")
 		data = []
 		for r in res:

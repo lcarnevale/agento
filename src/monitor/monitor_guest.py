@@ -34,7 +34,8 @@ class MonitorGuest():
 
 
 	def __mem_poll(self):
-		command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$2\";\"$4\";\"$6\";\"$7}'" # 1-id; 2-name; 4-memusage; 6-memlimit; 7-memperc
+		#command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$2\";\"$4\";\"$6\";\"$7}'" # 1-id; 2-name; 4-memusage; 6-memlimit; 7-memperc
+		command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$3\";\"$5\";\"$6}'" # 1-id; 3-memusage; 5-memlimit; 6-memperc
 		res = os.popen(command).read().split("\n")
 		data = []
 		for r in res:
@@ -46,10 +47,10 @@ class MonitorGuest():
 		data = {'guests': {}}
 		for arg in args:
 			data['guests'][arg[0]] = {
-				'name': arg[1],
-				'mem_usage': arg[2],
-				'mem_limit': arg[3],
-				'mem_perc': arg[4]
+				#'name': arg[1],
+				'mem_usage': arg[1],
+				'mem_limit': arg[2],
+				'mem_perc': arg[3]
 			}
 
 		json_data = json.dumps(data)
@@ -66,7 +67,8 @@ class MonitorGuest():
 
 
 	def __cpu_poll(self):
-		command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$2\";\"$3}'" # 1-id; 2-name; 3-cpu
+		#command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$2\";\"$3}'" # 1-id; 2-name; 3-cpu
+		command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$2}'" # 1-id; 2-cpu
 		res = os.popen(command).read().split("\n")
 		data = []
 		for r in res:
@@ -78,8 +80,8 @@ class MonitorGuest():
 		data = {'guests': {}}
 		for arg in args:
 			data['guests'][arg[0]] = {
-				'name': arg[1],
-				'cpu': arg[2]
+				#'name': arg[1],
+				'cpu': arg[1]
 			}
 
 		json_data = json.dumps(data)
@@ -96,7 +98,8 @@ class MonitorGuest():
 	
 
 	def __net_poll(self):
-		command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$2\";\"$8\";\"$8}'" # 1-id; 2-name; 8-netin; 9-netout
+		#command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$2\";\"$8\";\"$8}'" # 1-id; 2-name; 8-netin; 9-netout
+		command = "docker stats --no-stream | awk '{if (NR!=1) {print}}' | awk '{print $1\";\"$7\";\"$9}'" # 1-id; 7-netin; 9-netout
 		res = os.popen(command).read().split("\n")
 		data = []
 		for r in res:
@@ -108,9 +111,9 @@ class MonitorGuest():
 		data = {'guests': {}}
 		for arg in args:
 			data['guests'][arg[0]] = {
-				'name': arg[1],
-				'net_in': arg[2],
-				'net_out': arg[3]
+				#'name': arg[1],
+				'net_in': arg[1],
+				'net_out': arg[2]
 			}
 
 		json_data = json.dumps(data)

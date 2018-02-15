@@ -28,8 +28,7 @@ class Monitor():
 		self.__funDictDb = dict()
 		self.__funDictDb['null'] = self.__toNull
 		self.__funDictDb['redis'] = self.__toRedis
-		if db is 'redis':
-			print 'here'
+		if db == 'redis':
 			self.conn = redis.Redis('localhost')
 
 

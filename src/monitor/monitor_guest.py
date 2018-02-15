@@ -27,7 +27,7 @@ class MonitorGuest():
 		self.__funDictDb = dict()
 		self.__funDictDb['null'] = self.__toNull
 		self.__funDictDb['redis'] = self.__toRedis
-		if db is 'redis':
+		if db == 'redis':
 			self.conn = redis.Redis('localhost')
 
 

@@ -8,7 +8,9 @@ import os, sys, time
 from threading import Thread
 import json
 import redis
-
+import docker
+import pprint
+pp = pprint.PrettyPrinter(indent=2)
 
 DEBUG = 1
 
@@ -130,8 +132,7 @@ class MonitorGuest():
 
 
 	def __toRedis(self, threadName, json_data):
-		key = '%s_%s' % (threadName,str(int(time.time())))
-		self.conn.set(key, json_data)
+		self.conn.publish(threadName,json_data)
 
 	def __toNull(self, threadName, json_data):
 		old_stdout = sys.stdout
@@ -142,16 +143,23 @@ class MonitorGuest():
 
 
 	def run(self, mons):
+		client = docker.from_env()
 		try:
 			while True:
 				for mon in mons:
-					json_data = self.__funDictHw[mon]()
-					try:
-						thread = Thread(target = self.__funDictDb[self.__db], args = (mon, json_data, ))
-						thread.start()
-						thread.join()
-					except:
-					   print "Error: unable to start thread"
+					cons = client.containers.list()
+					print cons
+					for con in cons:
+						raw = client.containers.get(con.id)
+						pp.pprint(raw.stats(decode=True,stream=False))
+						break
+					#json_data = self.__funDictHw[mon]()
+					#try:
+					#	thread = Thread(target = self.__funDictDb[self.__db], args = (mon, json_data, ))
+					#	thread.start()
+					#	thread.join()
+					#except:
+					#   print "Error: unable to start thread"
 				time.sleep(self.__interval)
 		except (KeyboardInterrupt, SystemExit):
 			pass

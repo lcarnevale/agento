@@ -13,35 +13,35 @@ def apis_list():
     return jsonify({'response': True, 'status':200, 'comment': 'Hi, I am agento!'})
 
 
-@app.route('/api/v1/monitor/<string:option>', methods=['PUT', 'DELETE'])
-def monitor(option):
+@app.route('/api/v1/monitor', methods=['PUT', 'DELETE'])
+def monitor():
 
     options = ['mem', 'cpu', 'net'] # todo: from conffile
     sources = ['host', 'guest'] # todo: from conffile
     
-    if not option in options:
-        abort(404) # Raise an HTTPException with a 404 status code
     if request.method == 'PUT':
         payload = json.loads(request.data)
+        if not payload['option'] in options:
+            abort(404) # Raise an HTTPException with a 404 status code
         if not payload['source'] in sources:
             abort(400) # Raise an HTTPException with a 400 status code
-        command = 'python monitor/monitor_%s.py redis %s %s' % (payload['source'], payload['time'], option)
+        command = 'python monitor/monitor.py redis %s %s %s' % (payload['source'], payload['time'], payload['option'])
         p = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         return jsonify({
             'response': True,
             'method': request.method,
-            'option':option, 
+            'option':payload['option'], 
             'time': payload['time'],
             'source': payload['source']})
 
     elif request.method == 'DELETE':
         payload = json.loads(request.data)
         if payload['source'] == 'host' or payload['source'] == 'guest':
-            command = "ps -elf | grep python | grep %s | grep %s | grep -v grep | awk '{print $4}'" % (payload['source'], option)
+            command = "ps -elf | grep python | grep %s | grep %s | grep -v grep | awk '{print $4}'" % (payload['source'], payload['option'])
             command_ps = "ps -elf"
             command_grep1 = "grep python"
             command_grep2 = "grep %s" % (payload['source'])
-            command_grep3 = "grep %s" % (option)
+            command_grep3 = "grep %s" % (payload['option'])
             command_grep4 = "grep -v grep"
             command_awk = ["awk", "{print $4}"]
         else:

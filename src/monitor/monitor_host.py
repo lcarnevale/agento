@@ -150,8 +150,9 @@ class Monitor():
 
 
 	def __toRedis(self, threadName, json_data):
-		key = '%s_%s' % (threadName,str(int(time.time())))
-		self.conn.set(key, json_data)
+		#key = '%s_%s' % (threadName,str(int(time.time())))
+        #self.conn.set(key, json_data)
+        self.conn.publish(threadName,json_data)
 
 	def __toNull(self, threadName, json_data):
 		old_stdout = sys.stdout

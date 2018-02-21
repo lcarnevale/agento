@@ -7,7 +7,7 @@
 from threading import Thread
 import os, sys, time
 import psutil, json, redis, docker
-
+import pprint
 
 DEBUG = 1
 
@@ -110,6 +110,8 @@ class Monitor():
 			stats_container = container.stats(decode=True,stream=False)
 			data['guest']['cpu'][stats_container['id']] = stats_container['cpu_stats']
 			data['guest']['cpu'][stats_container['id']]['name'] = stats_container['name']
+			data['guest']['cpu'][stats_container['id']]['precpu_stats'] = stats_container['precpu_stats']
+			data['guest']['cpu'][stats_container['id']]['read'] = stats_container['read']
 
 		json_data = json.dumps(data)
 

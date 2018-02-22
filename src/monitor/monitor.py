@@ -108,7 +108,8 @@ class Monitor():
 		for one_container in all_containers:
 			container = self.__docker_client.containers.get(one_container.id)
 			stats_container = container.stats(decode=True,stream=False)
-			data['guest']['cpu'][stats_container['id']] = stats_container['cpu_stats']
+			data['guest']['cpu'][stats_container['id']] = {}
+			data['guest']['cpu'][stats_container['id']]['cpu_stats'] = stats_container['cpu_stats']
 			data['guest']['cpu'][stats_container['id']]['name'] = stats_container['name']
 			data['guest']['cpu'][stats_container['id']]['precpu_stats'] = stats_container['precpu_stats']
 			data['guest']['cpu'][stats_container['id']]['read'] = stats_container['read']

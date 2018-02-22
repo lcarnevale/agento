@@ -37,28 +37,33 @@ def monitor():
     elif request.method == 'DELETE':
         payload = json.loads(request.data)
         if payload['source'] == 'host' or payload['source'] == 'guest':
-            command = "ps -elf | grep python | grep %s | grep %s | grep -v grep | awk '{print $4}'" % (payload['source'], payload['option'])
-            command_ps = "ps -elf"
-            command_grep1 = "grep python"
-            command_grep2 = "grep %s" % (payload['source'])
-            command_grep3 = "grep %s" % (payload['option'])
-            command_grep4 = "grep -v grep"
-            command_awk = ["awk", "{print $4}"]
+            #command = "ps -elf | grep python | grep %s | grep %s | grep -v grep | awk '{print $4}'" % (payload['source'], payload['option'])
+            #command_ps = "ps -elf"
+            #command_grep1 = "grep python"
+            #command_grep2 = "grep %s" % (payload['source'])
+            #command_grep3 = "grep %s" % (payload['option'])
+            #command_grep4 = "grep -v grep"
+            #command_awk = ["awk", "{print $4}"]
+            command = 'python monitor/killproc.py monitor/monitor.py %s %s' % (payload['source'], payload['option'])
+            p = subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            out, err = p.communicate()
+            if err:
+                abort(400)
         else:
             abort(400) # Raise an HTTPException with a 400 status code
-        p_ps = subprocess.Popen(command_ps.split(), stdout=subprocess.PIPE)
-        p_grep1 = subprocess.Popen(command_grep1.split(), stdin=p_ps.stdout, stdout=subprocess.PIPE)
-        p_grep2 = subprocess.Popen(command_grep2.split(), stdin=p_grep1.stdout, stdout=subprocess.PIPE)
-        p_grep3 = subprocess.Popen(command_grep3.split(), stdin=p_grep2.stdout, stdout=subprocess.PIPE)
-        p_grep4 = subprocess.Popen(command_grep4.split(), stdin=p_grep3.stdout, stdout=subprocess.PIPE)
-        p_awk = subprocess.Popen(command_awk, stdin=p_grep4.stdout, stdout=subprocess.PIPE)
-        p_ps.stdout.close()
-        pid = p_awk.communicate()[0].split("\n")[0]
-        p_ps.wait()
+        #p_ps = subprocess.Popen(command_ps.split(), stdout=subprocess.PIPE)
+        #p_grep1 = subprocess.Popen(command_grep1.split(), stdin=p_ps.stdout, stdout=subprocess.PIPE)
+        #p_grep2 = subprocess.Popen(command_grep2.split(), stdin=p_grep1.stdout, stdout=subprocess.PIPE)
+        #p_grep3 = subprocess.Popen(command_grep3.split(), stdin=p_grep2.stdout, stdout=subprocess.PIPE)
+        #p_grep4 = subprocess.Popen(command_grep4.split(), stdin=p_grep3.stdout, stdout=subprocess.PIPE)
+        #p_awk = subprocess.Popen(command_awk, stdin=p_grep4.stdout, stdout=subprocess.PIPE)
+        #p_ps.stdout.close()
+        #pid = p_awk.communicate()[0].split("\n")[0]
+        #p_ps.wait()
 
-        if not pid:
-            abort(400) # Raise an HTTPException with a 400 status code
-        p = subprocess.Popen(["kill", "-9", pid], stdout=subprocess.PIPE)
+        #if not pid:
+        #    abort(400) # Raise an HTTPException with a 400 status code
+        #p = subprocess.Popen(["kill", "-9", pid], stdout=subprocess.PIPE)
         
         return jsonify({
             'response': True,

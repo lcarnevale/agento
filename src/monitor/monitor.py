@@ -195,9 +195,10 @@ class Monitor():
 		try:
 			while True:
 				for mon in mons:
-					thread = Thread(target = self.__sample, args = (source, mon, ))
-					thread.start()
-					thread.join()
+					self.__sample(source, mon)
+					#thread = Thread(target=self.__sample, args=(source, mon,))
+					#thread.start()
+					#thread.join()
 				time.sleep(self.__interval)
 		except (KeyboardInterrupt, SystemExit):
 			pass

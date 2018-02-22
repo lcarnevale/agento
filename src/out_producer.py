@@ -10,9 +10,10 @@ def main(channel, redis_host='localhost', kafka_host='localhost', kafka_port='90
 	p = r.pubsub()
 	p.subscribe([channel])
 
-	while True:
+	PAUSE = True
+
+	while PAUSE:
 		message = p.get_message()
-		print message
 		if message:
 			try:
 				producer = KafkaProducer(
@@ -22,11 +23,12 @@ def main(channel, redis_host='localhost', kafka_host='localhost', kafka_port='90
 				producer.send(message['channel'], message['data'])
 			except TypeError:
 				print 'jump'
-			time.sleep(1)
+		time.sleep(1)
 
 if __name__ == '__main__':
 	# get json as argv
 	channel=sys.argv[1]
-	thread = Thread(target = main, args = (channel, ))
-	thread.start()
-	thread.join()
+	main(channel)
+	#thread = Thread(target = main, args = (channel, ))
+	#thread.start()
+	#thread.join()

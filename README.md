@@ -58,7 +58,7 @@ $ pip install -r requirements.txt
 The following commands will help you to start the web service.
 
 ```bash
-$ export FLASK_APP=restful.py
+$ export FLASK_APP=main.py
 $ flask run
 ```
 
@@ -236,4 +236,4 @@ This project implements two services.
 }
 ```
 ## Credits
-agento is the result of research conducted at the University of Messina. 
+agento is part of the Osmotic Computing activities carried out at both University of Messina and TU Wien.

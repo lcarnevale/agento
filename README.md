@@ -205,6 +205,22 @@ This project implements two services.
 	The PUT API downloads (if not present the image) and runs a container in detach mode.
 	The DELETE API stops and removes the container and deletes the images.
 
+## Bibliography
 
+```latex
+@article{Villari2016,
+  doi = {10.1109/mcc.2016.124},
+  url = {https://doi.org/10.1109/mcc.2016.124},
+  year  = {2016},
+  month = {nov},
+  publisher = {Institute of Electrical and Electronics Engineers ({IEEE})},
+  volume = {3},
+  number = {6},
+  pages = {76--83},
+  author = {Massimo Villari and Maria Fazio and Schahram Dustdar and Omer Rana and Rajiv Ranjan},
+  title = {Osmotic Computing: A New Paradigm for Edge/Cloud Integration},
+  journal = {{IEEE} Cloud Computing}
+}
+```
 ## Credits
 agento is the result of research conducted at the University of Messina. 

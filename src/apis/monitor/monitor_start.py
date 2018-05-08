@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-    blablabla
+    This is a standalone application ables to monitor hardware
+    and software resources both of host and guests (docker
+    containers).
 
     The scope of the application is academic research.
     It is part of the Osmotic Computing activities carried 
@@ -30,8 +32,16 @@ from daemon import runner
 DEBUG = 1
 
 class App():
+	"""
+		It is a daemon application running in background.
+	"""
 
-	def __init__(self, interval, db, target, resource):
+	def __init__(self, interval, target, resource):
+		"""
+			It initializes the class variables and fills the
+			methods running dictionaries.
+		"""
+
 		# deamon variables
 		self.stdin_path = '/dev/null'
 		self.stdout_path = '/dev/tty'
@@ -40,27 +50,33 @@ class App():
 		self.pidfile_timeout = 5
 		# class variables
 		self.__interval = float(interval)
-		self.__db = str(db)
 		self.__target = target
 		self.__resources = resource
-		#
+		# docker environment
 		self.__docker_client = docker.from_env()
-		# function's dictionary for hw
-		self.__run_by_resource = dict()
-		self.__run_by_resource['mem'] = self.__mem
-		self.__run_by_resource['cpu'] = self.__cpu
-		self.__run_by_resource['net'] = self.__net
-		# function's dictionary for db
-		self.__funDictDb = dict()
-		self.__funDictDb['null'] = self.__toNull
-		self.__funDictDb['redis'] = self.__toRedis
-		if db == 'redis':
-			self.conn = redis.Redis('localhost')
+		# database variables
+		self.conn = None
+		#self.conn = redis.Redis('localhost')
+		# python methods dictionary for the resources/targets
+		self.__run_by_resource = {'mem': {}, 'cpu': {}, 'net': {}}
+		self.__run_by_resource['mem']['host'] = self.__mem_host
+		self.__run_by_resource['mem']['guest'] = self.__mem_guest
+		self.__run_by_resource['cpu']['host'] = self.__cpu_host
+		self.__run_by_resource['cpu']['guest'] = self.__cpu_guest
+		self.__run_by_resource['net']['host'] = self.__net_host
+	
 
-
-
+	# resources methods
 	def __mem_host(self):
-		"""."""
+		"""
+			This method performs a monitoring of the host
+			memory (RAM) resource. 
+
+			Returns:
+				a JSON format dataset with the monitored
+				information.
+		"""
+
 		virt = psutil.virtual_memory()
 		swap = psutil.swap_memory()
 
@@ -73,7 +89,7 @@ class App():
 			'buffers': int(getattr(virt, 'buffers', 0) / 1024),
 			'cache': int(getattr(virt, 'cached', 0) / 1024)
 		}
-		data['swap'] = {
+		data['host']['swap'] = {
 			'total': int(swap.total / 1024),
 			'used': int(swap.used / 1024),
 			'free': int(swap.free / 1024)
@@ -87,6 +103,15 @@ class App():
 		return json_data
 
 	def __mem_guest(self):
+		"""
+			This method performs a monitoring of the guest
+			(docker containers) memory (RAM) resources. 
+
+			Returns:
+				a JSON format dataset with the monitored
+				information.
+		"""
+
 		data = {'guest': {'mem': {}}}
 		all_containers = self.__docker_client.containers.list()
 		for one_container in all_containers:
@@ -102,18 +127,16 @@ class App():
 
 		return json_data
 
-	def __mem(self):
-		if self.__target == 'host':
-			json_data = self.__mem_host()
-		elif self.__target == 'guest':
-			json_data = self.__mem_guest()
-		else:
-			# run exception
-			pass
-		return json_data
-
-
 	def __cpu_host(self):
+		"""
+			This method performs a monitoring of the host
+			CPU resource. 
+
+			Returns:
+				a JSON format dataset with the monitored
+				information.
+		"""
+
 		percs = psutil.cpu_percent(interval=0, percpu=True)
 		data = {'host':{'cpu':{}}}
 		for cpu_num, perc in enumerate(percs):
@@ -129,6 +152,14 @@ class App():
 		return json_data
 
 	def __cpu_guest(self):
+		"""
+			This method performs a monitoring of the guest
+			(docker containers) CPU resources. 
+
+			Returns:
+				a JSON format dataset with the monitored
+				information.
+		"""
 		data = {'guest': {'cpu': {}}}
 		all_containers = self.__docker_client.containers.list()
 		for one_container in all_containers:
@@ -147,19 +178,15 @@ class App():
 
 		return json_data
 
-	def __cpu(self):
-		if self.__target == 'host':
-			json_data = self.__cpu_host()
-		elif self.__target == 'guest':
-			json_data = self.__cpu_guest()
-		else:
-			# run exception
-			pass
-		return json_data
-
-
 	def __net_host(self):
-		"""."""
+		"""
+			This method performs a monitoring of the host
+			network resource. 
+
+			Returns:
+				a JSON format dataset with the monitored
+				information.
+		"""
 		tot = psutil.net_io_counters()
 		pnic = psutil.net_io_counters(pernic=True)
 
@@ -188,48 +215,43 @@ class App():
 
 		return json_data
 
-	def __net_guest(self):
-		pass
 
-	def __net(self):
-		if self.__target == 'host':
-			json_data = self.__net_host()
-		elif self.__target == 'guest':
-			json_data = self.__net_guest()
-		else:
-			# run exception
-			pass
-		return json_data
+	# dbs methods
+	def __toRedis(self, resource, json_data):
+		"""
+			It stores monitored data in redis database.
 
+			Args:
+				resource: the data's resource used as key;
+				json_data: monitored data in JSON format.
+		"""
 
-	def __toRedis(self, mon, json_data):
-		self.conn.publish(mon,json_data)
-
-	def __toNull(self, mon, json_data):
-		old_stdout = sys.stdout
-		sys.stdout = open(os.devnull, 'w')
-		sys.stdout = old_stdout
-		if DEBUG:
-			print 'toNull'
-
-
-	def __sample(self, resource):
-		json_data = self.__run_by_resource[resource]()
-		self.__funDictDb[self.__db](resource, json_data)
+		if self.conn:
+			self.conn.publish(resource, json_data)
 
 
 	def run(self):
+		"""
+			It is the starting point of the daemon. For each
+			parameterized resource, it starts the monitor and
+			stores results on database.
+		"""
+
 		while True:
 			for resource in self.__resources:
-				self.__sample(resource)
+				try:
+					json_data = self.__run_by_resource[resource][self.__target]()
+				except KeyError:
+					# todo: raise exception
+					print 'no json data'
+				#self.__toRedis(resource, json_data)
 			time.sleep(self.__interval)
 
 
-db = sys.argv[2]
+interval = sys.argv[2]
 target = sys.argv[3]
-interval = sys.argv[4]
-resources = sys.argv[5:]
+resources = sys.argv[4:]
 
-app = App(interval, db, target, resources)
+app = App(interval, target, resources)
 daemon_runner = runner.DaemonRunner(app)
 daemon_runner.do_action()

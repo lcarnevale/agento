@@ -79,10 +79,10 @@ Execute  	| PUT, DELETE 	| /api/v1/deploy 									| None
 
 ### Monitor App
 	
-	blablabla
+blablabla
 	
-	- *time* represents the sample time in second;
-	- *source* represents the source from which is read the monitor. It is **host** or **guest**.
+- *time* represents the sample time in second;
+- *source* represents the source from which is read the monitor. It is **host** or **guest**.
 
 
 - **HTTP Response**
@@ -93,19 +93,19 @@ Execute  	| PUT, DELETE 	| /api/v1/deploy 									| None
 
 #### Example
 
-	```bash
-	$ curl -i -X PUT \
-	-H "Content-Type: application/json" \
-	-d '{ \
-		"time":2, \
-	}' \
-	http://localhost:5000/api/v1/monitor/[resource]/[target]
-	```
+```bash
+$ curl -i -X PUT \
+-H "Content-Type: application/json" \
+-d '{ \
+	"time":2, \
+}' \
+http://localhost:5000/api/v1/monitor/[resource]/[target]
+```
 
-	```bash
-	$ curl -i -X DELETE \
-	http://localhost:5000/api/v1/monitor/[resource]/[target]
-	```
+```bash
+$ curl -i -X DELETE \
+http://localhost:5000/api/v1/monitor/[resource]/[target]
+```
 
 ### Deploy
 

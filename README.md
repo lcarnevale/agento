@@ -221,6 +221,23 @@ This project implements two services.
   title = {Osmotic Computing: A New Paradigm for Edge/Cloud Integration},
   journal = {{IEEE} Cloud Computing}
 }
+
+@InProceedings{10.1007/978-3-319-61566-0_86,
+author="Villari, Massimo
+and Celesti, Antonio
+and Fazio, Maria",
+editor="Barolli, Leonard
+and Terzo, Olivier",
+title="Towards Osmotic Computing: Looking at Basic Principles and Technologies",
+booktitle="Complex, Intelligent, and Software Intensive Systems",
+year="2018",
+publisher="Springer International Publishing",
+address="Cham",
+pages="906--915",
+abstract="Osmotic Computing is becoming the new paradigm in the area of Computing. This paper shows how it can represents the glue of recent topics including Cloud, Edge and Fog Computing, and Internet of Things (IoT). Osmotic Computing introduces elements allowing to treat computation, networking, storage, data transfer and management among Cloud and IoT devices in Edge computing layers in a more harmonized fashion. In particular, we discuss how it can enable an abstraction of services that could bring into a new Software Defined of Everything era.",
+isbn="978-3-319-61566-0"
+}
+
 ```
 ## Credits
 agento is the result of research conducted at the University of Messina. 

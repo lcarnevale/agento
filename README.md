@@ -72,36 +72,15 @@ This project implements two services. The table below shows an overview.
 
 Application | HTTP Methods  | Url 												| Payload [JSON]
 ----------- | ------------- | ------------------------------------------------- | --------------
-Monitor  	| PUT, DELETE 	| /api/v1/monitor/[string:resource]/[string-target] | [int:time]
+Monitor  	| PUT, DELETE 	| /api/v1/monitor/[string:resource]/[string:target] | [int:time]
 Analysis	| todo			| todo												| todo
 Plan		| todo			| todo												| todo
 Execute  	| PUT, DELETE 	| /api/v1/deploy 									| None
 
 ### Monitor App
-
-- **/api/v1/monitor**
-
-- **Method**
-
-	PUT | DELETE
-
-- **URL Params**
-
-	/api/v1/monitor/\<string:option\>
 	
-	**Required**:
+	blablabla
 	
-	option=[string]
-
-- **Data Params**
-
-	```bash
-	{
-		"time":[integer], 
-		"source":[string]
-	}
-	```
-
 	- *time* represents the sample time in second;
 	- *source* represents the source from which is read the monitor. It is **host** or **guest**.
 
@@ -127,6 +106,7 @@ Execute  	| PUT, DELETE 	| /api/v1/deploy 									| None
 	$ curl -i -X DELETE \
 	http://localhost:5000/api/v1/monitor/[resource]/[target]
 	```
+
 ### Deploy
 
 - **/api/v1/deploy**

@@ -22,14 +22,14 @@ __status__ = "Prototype"
 import subprocess
 import os
 import json
-from flask import jsonify
-from flask import request
 from flask import abort
+from flask import Response
 
 
 class MonitorManager():
     """
-
+        This class implements the PUT and DELETE functions
+        for the monitor application.
     """
 
     def __init__(self, resource, target, payload):
@@ -60,27 +60,39 @@ class MonitorManager():
 
     def __put(self):
         """
+            The PUT method starts the monitor application
+            according to the parameters received and
+            stored on the that class.
+
+            Returns:
+                - a HTTP response with 400 (status code) if the
+                    payload not exist;
+                - a HTTP response with 200 (status code) if the
+                    application run good.
         """
         if not self.payload:
             abort(400)
         command = 'python apis/monitor/monitor_start.py start null %s %s %s' % (self.target, self.payload['time'], self.resource)
-        #p = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         os.system(command)
-        return jsonify({
-            'response': True,
-            })
+        return Response('Monitor starts succesfully', status=200)
 
     def __delete(self):
         """
+            The DELETE method ends the monitor application
+            according to the parameters received and stored on the class.
+
+            Returns:
+                - a HTTP response with 400 (status code) if an error
+                is generated;
+                - a HTTP response with 200 (status code) if the
+                application run good.
         """
         command = 'python apis/monitor/monitor_end.py %s %s' % (self.target, self.resource)
         p = subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
         if err:
             abort(400)
-        return jsonify({
-            'response': True,
-            'status': 200})
+        return Response('Monitor ends succesfully', status=200)
 
 
     def run(self, method):

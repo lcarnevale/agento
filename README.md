@@ -68,14 +68,16 @@ $ curl -i http://localhost:5000/api/v1
 ```
 
 ## RESTful APIs list
-This project implements two services.
+This project implements two services. The table below shows an overview.
 
-Application | HTTP Methods  | Url
------------ | ------------- | -----------
-Monitor  	| PUT, DELETE 	| /api/v1/monitor/<string:resource>/<string-target>
-execute  	| PUT, DELETE 	| /api/v1/deploy
+Application | HTTP Methods  | Url 												| Payload [JSON]
+----------- | ------------- | ------------------------------------------------- | --------------
+Monitor  	| PUT, DELETE 	| /api/v1/monitor/[string:resource]/[string-target] | [int:time]
+Analysis	| todo			| todo												| todo
+Plan		| todo			| todo												| todo
+Execute  	| PUT, DELETE 	| /api/v1/deploy 									| None
 
-### Monitor
+### Monitor App
 
 - **/api/v1/monitor**
 
@@ -103,41 +105,28 @@ execute  	| PUT, DELETE 	| /api/v1/deploy
 	- *time* represents the sample time in second;
 	- *source* represents the source from which is read the monitor. It is **host** or **guest**.
 
-- **Success Response**
 
-	- {'response': True, 'status': 200}
-
-- **Error Response**
+- **HTTP Response**
 
 	- **Code**: 404 Not Found
 	- **Code**: 400 Bad Request
+	- **Code**: 200 Success
 
-- **Sample Call**
+#### Example
 
 	```bash
 	$ curl -i -X PUT \
 	-H "Content-Type: application/json" \
 	-d '{ \
 		"time":2, \
-		"source":"guest" \
 	}' \
-	http://localhost:5000/api/v1/monitor/mem
+	http://localhost:5000/api/v1/monitor/[resource]/[target]
 	```
 
 	```bash
 	$ curl -i -X DELETE \
-	-H "Content-Type: application/json" \
-	-d '{ \
-		"source":"guest" \	
-	}' \
-	http://localhost:5000/api/v1/monitor/mem
+	http://localhost:5000/api/v1/monitor/[resource]/[target]
 	```
-
-- **Note**
-
-	The PUT API executes a child program in a new process for monitoring cpu, network or memory. It run separately process for each monitor. You are able to monitor host cpu with sample time 5 second and guest mem with sample time 10 second.
-	The DELETE API executes a child program in a new process for killing the monitoring.
-
 ### Deploy
 
 - **/api/v1/deploy**

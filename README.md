@@ -9,6 +9,9 @@ agento is the first ever designed and developed Osmotic Agent. Its task is to ma
 
 agento is a lightweight virtual machine that interacts with the host operating system in order to monitor host itself and other virtual machines; and deploy MicroELements (MELs) on the same level.
 
+<p align="center">
+  <img width="460" height="300" src="http://www.fillmurray.com/460/300">
+</p>
 ![agento-environment](https://github.com/lcarnevale/agento/blob/master/doc/figure/agento1.png?raw=true)
 
 It is designed on three layers. The Interface layer includes the RESTful APIs for using the deploy and monitor funcionalities. It is an HTTP interface for enabling the Osmotic Agent services and receives instructions from the architecture core. On the other hand, the Event producer consumes the data received from the Storage Layer and sends these to the architecture core.

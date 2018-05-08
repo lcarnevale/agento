@@ -70,11 +70,10 @@ $ curl -i http://localhost:5000/api/v1
 ## RESTful APIs list
 This project implements two services.
 
-First Header  | Second Header
-------------- | -------------
-Content Cell  | Content Cell
-Content Cell  | Content Cell
-
+Application | HTTP Methods  | Url
+----------- | ------------- | -----------
+Monitor  	| PUT, DELETE 	| /api/v1/monitor/<string:resource>/<string-target>
+execute  	| PUT, DELETE 	| /api/v1/deploy
 
 ### Monitor
 

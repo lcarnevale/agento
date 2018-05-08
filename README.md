@@ -234,7 +234,6 @@ This project implements two services.
 	abstract="Osmotic Computing is becoming the new paradigm in the area of Computing. This paper shows how it can represents the glue of recent topics including Cloud, Edge and Fog Computing, and Internet of Things (IoT). Osmotic Computing introduces elements allowing to treat computation, networking, storage, data transfer and management among Cloud and IoT devices in Edge computing layers in a more harmonized fashion. In particular, we discuss how it can enable an abstraction of services that could bring into a new Software Defined of Everything era.",
 	isbn="978-3-319-61566-0"
 }
-
 ```
 ## Credits
 agento is the result of research conducted at the University of Messina. 

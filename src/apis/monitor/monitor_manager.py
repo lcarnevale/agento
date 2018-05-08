@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-    Functionalities for the monitor route
+    Functionalities for the monitor routes.
 
     The scope of the application is academic research.
     It is part of the Osmotic Computing activities carried 
@@ -25,8 +25,6 @@ import json
 from flask import jsonify
 from flask import request
 from flask import abort
-#from monitor_start import MonitorStart
-#from monitor_end import MonitorEnd
 
 
 class MonitorManager():

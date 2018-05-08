@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 """
-    Agento RESTful App
+    Agento RESTful Interface
 
     This application implements a RESTful server to manage 
     the following operations:
         - monitor;
-        - deploy.
+        - execute.
 
-    TODO
+    github.com/lcarnevale/agento
 
     The scope of the application is academic research.
     It is part of the Osmotic Computing activities carried 
@@ -29,9 +29,9 @@ __status__ = "Prototype"
 import json
 import docker
 from flask import Flask
-from flask import jsonify
 from flask import request
-from flask import abort
+from flask import abort # todo: remove
+from flask import Response
 from apis.welcome.route import route_rules
 from apis.monitor.monitor_manager import MonitorManager
 
@@ -41,22 +41,38 @@ app = Flask(__name__)
 
 @app.route('/api/v1', methods=['GET'])
 def apis_list():
+    """
+        This route starts a welcome page.
+
+        Return:
+            a list of routes.
+    """
+
     data = route_rules(app)
-    # return route_table(data)
-    return jsonify({'response': True, 
-        'content': data, 
-        'status':200, 
-        'comment': 'Hi, I am agento!'
-    })
+    # todo: return route_table(data)
+    return Response(str(data), status=200)
 
 
 @app.route('/api/v1/monitor/<resource>/<target>', methods=['PUT', 'DELETE'])
 def monitor(resource, target):
+    """
+        This route starts the Monitor application, which is managed
+        by the related class.
+
+        Args:
+            resource: the hardware or software resource that
+                have to be monitored;
+            target: the source (host or guest).
+
+        Return:
+            a HTTP response.
+    """
 
     monitorManager = MonitorManager(resource, target, request.data)
     return monitorManager.run(request.method)
 
 
+# todo: fix it
 @app.route('/api/v1/deploy', methods=['PUT', 'DELETE'])
 def deploy():
 
@@ -83,6 +99,4 @@ def deploy():
         except docker.errors.APIError as e:
             abort(409) # Raise an HTTPException with a 409 status code
 
-    return  jsonify({
-        'response': True,
-        'status': 200})
+    return Response(status=200)
